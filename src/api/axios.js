@@ -5,7 +5,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-    }
+    },
 })
 
 api.interceptors.request.use((config) => {
@@ -15,5 +15,17 @@ api.interceptors.request.use((config) => {
     }
     return config
 })
+
+// Handle 401 - auto logout
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token')
+            window.location.href = '/login'
+        }
+        return Promise.reject(error)
+    }
+)
 
 export default api
