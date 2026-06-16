@@ -42,6 +42,7 @@ const ITEMS_PER_PAGE = 3
 
 export default function Menu() {
     const [pages, setPages] = useState({ Coffee: 0, Drinks: 0, Snacks: 0 })
+    const featuredCount = categories.reduce((sum, category) => sum + category.items.length, 0)
 
     const nextPage = (cat, total) => {
         const maxPage = Math.ceil(total / ITEMS_PER_PAGE) - 1
@@ -54,11 +55,41 @@ export default function Menu() {
 
     return (
         <div className="bg-cream min-h-screen">
-            <div className="max-w-2xl mx-auto px-6 pt-28 pb-16">
+            <section className="relative overflow-hidden px-6 pt-32 pb-16">
+                <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        background:
+                            'radial-gradient(circle at 20% 15%, rgba(123,59,42,0.18), transparent 30%), radial-gradient(circle at 85% 10%, rgba(232,201,154,0.45), transparent 32%)',
+                    }}
+                />
+                <div className="relative max-w-6xl mx-auto">
+                    <div className="rounded-3xl bg-cafe-black px-8 py-10 md:px-12 md:py-14 text-cream shadow-warm-lg">
+                        <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-cafe-gold font-semibold mb-4">
+                            Signature Collection
+                        </p>
+                        <h1 className="font-serif text-4xl md:text-6xl leading-tight">
+                            Crafted Menu, Luxury Cafe Experience
+                        </h1>
+                        <p className="mt-5 text-cream/80 max-w-2xl">
+                            Discover handcrafted coffee, elevated drinks, and gourmet snacks designed for moments that feel special.
+                        </p>
+                        <div className="mt-7 flex flex-wrap gap-3">
+                            <Link
+                                to="/order"
+                                className="px-6 py-3 rounded-full bg-cafe-gold text-cafe-black text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+                            >
+                                Start Ordering
+                            </Link>
+                            <span className="px-6 py-3 rounded-full border border-cream/25 text-xs font-semibold uppercase tracking-widest">
+                                {categories.length} categories - {featuredCount} items
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <h1 className="font-serif text-3xl font-bold text-cafe-black text-center mb-8">
-                    Our Menu
-                </h1>
+            <div className="max-w-6xl mx-auto px-6 pb-20">
 
                 {categories.map((cat) => {
                     const page = pages[cat.name]
@@ -66,19 +97,18 @@ export default function Menu() {
                     const visible = cat.items.slice(page * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE + ITEMS_PER_PAGE)
 
                     return (
-                        <div key={cat.name} className="mb-10">
+                        <section key={cat.name} className="mb-14">
 
-                            {/* Category Header */}
-                            <div className="flex items-center justify-between mb-4">
-                                <span className="bg-cream-dark text-brown text-xs font-bold px-4 py-1.5 rounded-full">
-                                    {cat.name}
-                                </span>
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    <p className="text-[11px] uppercase tracking-[0.25em] text-brown/70 font-semibold">Category</p>
+                                    <h2 className="font-serif text-3xl text-cafe-black">{cat.name}</h2>
+                                </div>
                                 <Link to="/order" className="text-brown text-xs font-semibold hover:underline">
-                                    view all &gt;
+                                    View all &gt;
                                 </Link>
                             </div>
 
-                            {/* Items */}
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={page}
@@ -86,30 +116,38 @@ export default function Menu() {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
                                     transition={{ duration: 0.3 }}
-                                    className="grid grid-cols-3 gap-3"
+                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
                                 >
                                     {visible.map((item) => (
                                         <motion.div
                                             key={item.name}
-                                            whileHover={{ y: -4, boxShadow: '0 12px 30px rgba(123,59,42,0.15)' }}
-                                            className="bg-cream-light rounded-2xl overflow-hidden cursor-pointer"
-                                            style={{ boxShadow: '0 2px 8px rgba(123,59,42,0.08)' }}
+                                            whileHover={{ y: -6, boxShadow: '0 18px 42px rgba(123,59,42,0.18)' }}
+                                            className="bg-cream-light rounded-3xl overflow-hidden cursor-pointer border border-brown/10"
+                                            style={{ boxShadow: '0 6px 20px rgba(123,59,42,0.10)' }}
                                         >
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="w-full h-28 object-cover"
-                                            />
-                                            <div className="p-3">
-                                                <p className="font-semibold text-cafe-black text-sm">{item.name}</p>
-                                                <p className="text-brown text-sm font-bold mt-0.5">{item.price}</p>
+                                            <div className="relative">
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-full h-44 object-cover"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-cafe-black/25 via-transparent to-transparent" />
+                                            </div>
+                                            <div className="p-5">
+                                                <p className="font-semibold text-cafe-black text-lg">{item.name}</p>
+                                                <p className="text-brown text-lg font-bold mt-1">{item.price}</p>
+                                                <Link
+                                                    to="/order"
+                                                    className="inline-flex mt-4 text-[11px] uppercase tracking-[0.2em] font-bold text-brown hover:text-brown-dark transition-colors"
+                                                >
+                                                    Add to order
+                                                </Link>
                                             </div>
                                         </motion.div>
                                     ))}
                                 </motion.div>
                             </AnimatePresence>
 
-                            {/* Pagination dots */}
                             <div className="flex items-center justify-center gap-2 mt-4">
                                 <button
                                     onClick={() => prevPage(cat.name)}
@@ -139,7 +177,7 @@ export default function Menu() {
                                 </button>
                             </div>
 
-                        </div>
+                        </section>
                     )
                 })}
             </div>

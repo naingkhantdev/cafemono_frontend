@@ -16,7 +16,7 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     
     // Check if we are on a page that starts with a dark section
-    const isDarkPage = pathname === '/about' || pathname === '/contact' || pathname === '/menu'
+    const isDarkPage = pathname === '/about' || pathname === '/contact'
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20)
